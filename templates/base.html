@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Oohay{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="top-nav">
+        <div class="nav-container">
+            <a href="/" class="logo">Oohay!</a>
+            <form action="/search" method="GET" class="search-bar">
+                <input type="text" name="q" placeholder="Search the web..." required>
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+            <div class="user-actions">
+                {% if user %}
+                    <a href="/mail" class="icon-btn">Mail</a>
+                    <span style="font-weight: 600; margin-left: 0.5rem; color: var(--primary-color);">{{ user.username }}</span>
+                    <a href="/logout" class="icon-btn" style="font-size: 0.8rem;">Logout</a>
+                {% else %}
+                    <a href="/login" class="icon-btn" style="color: var(--primary-color); font-weight: 600;">Sign In</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    
+    <nav class="category-nav">
+        <div class="nav-container">
+            <a href="/">Home</a>
+            <a href="/mail">Mail</a>
+            <a href="/">News</a>
+            <a href="/finance">Finance</a>
+            <a href="/category/sports">Sports</a>
+            <a href="/category/entertainment">Entertainment</a>
+            <a href="/category/life">Life</a>
+            <a href="/category/shopping">Shopping</a>
+            <a href="/category/more">More</a>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

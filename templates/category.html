@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Oohay {{ category_name }}{% endblock %}
+{% block content %}
+<main class="main-container" style="grid-template-columns: 1fr;">
+    <section class="category-header">
+        <h1 style="color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; margin-bottom: 2rem;">{{ category_name }} News</h1>
+    </section>
+    <div class="news-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        <article class="news-card card">
+            <div class="card-image placeholder-img" style="background: url('/static/images/ev_car_1777221897968.png') center/cover; height: 200px;"></div>
+            <div class="card-content">
+                <h3>Top story in {{ category_name }}</h3>
+                <span class="source">Oohay {{ category_name }}</span>
+            </div>
+        </article>
+        <article class="news-card card">
+            <div class="card-image placeholder-img" style="background: url('/static/images/quantum_computer_1777221917184.png') center/cover; height: 200px;"></div>
+            <div class="card-content">
+                <h3>Another update on {{ category_name }}</h3>
+                <span class="source">Daily Report</span>
+            </div>
+        </article>
+        <article class="news-card card">
+            <div class="card-image placeholder-img" style="background: url('/static/images/sports_finals_1777221934464.png') center/cover; height: 200px;"></div>
+            <div class="card-content">
+                <h3>Expert analysis: {{ category_name }} trends</h3>
+                <span class="source">Analysts</span>
+            </div>
+        </article>
+    </div>
+</main>
+{% endblock %}

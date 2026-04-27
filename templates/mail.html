@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Oohay Mail{% endblock %}
+{% block content %}
+<main class="main-container mail-container">
+    <aside class="left-sidebar mail-sidebar">
+        <button class="compose-btn">Compose</button>
+        <ul class="sidebar-links" style="margin-top: 1rem;">
+            <li class="active" style="background-color: #e8e8e8; border-radius: 8px;"><a href="#" style="color: var(--primary-color); font-weight: 700;">Inbox (3)</a></li>
+            <li><a href="#">Unread</a></li>
+            <li><a href="#">Starred</a></li>
+            <li><a href="#">Drafts</a></li>
+            <li><a href="#">Sent</a></li>
+            <li><a href="#">Spam</a></li>
+            <li><a href="#">Trash</a></li>
+        </ul>
+    </aside>
+    <section class="mail-inbox card" style="grid-column: 2 / 4;">
+        <div class="inbox-header" style="padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background-color: #f9f9f9;">
+            <h3 style="margin: 0;">Inbox</h3>
+        </div>
+        <div class="mail-list">
+            <div class="mail-item unread" style="display: grid; grid-template-columns: 200px 1fr 100px; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background-color: #fff; font-weight: 700; cursor: pointer;">
+                <span class="sender">Oohay Team</span>
+                <span class="subject">Welcome to Oohay Mail!</span>
+                <span class="date" style="text-align: right;">10:00 AM</span>
+            </div>
+            <div class="mail-item unread" style="display: grid; grid-template-columns: 200px 1fr 100px; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background-color: #fff; font-weight: 700; cursor: pointer;">
+                <span class="sender">Finance Update</span>
+                <span class="subject">Your weekly portfolio review is ready</span>
+                <span class="date" style="text-align: right;">Yesterday</span>
+            </div>
+            <div class="mail-item" style="display: grid; grid-template-columns: 200px 1fr 100px; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background-color: #fcfcfc; cursor: pointer; color: var(--text-muted);">
+                <span class="sender">Jane Doe</span>
+                <span class="subject">Meeting notes from Tuesday</span>
+                <span class="date" style="text-align: right;">Oct 24</span>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Oohay Search{% endblock %}
+{% block content %}
+<main class="main-container" style="grid-template-columns: 1fr;">
+    <div class="search-results-header" style="margin-bottom: 2rem;">
+        <h2>Search results for "{{ query }}"</h2>
+        <span class="text-muted" style="color: var(--text-muted); font-size: 0.9rem;">About 1,240,000 results (0.34 seconds)</span>
+    </div>
+    
+    <div class="search-results-list" style="max-width: 800px; display: flex; flex-direction: column; gap: 1.5rem;">
+        <div class="result-item" style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <a href="#" style="color: var(--primary-color); font-size: 1.2rem; font-weight: 500; text-decoration: underline;">Official page for {{ query }}</a>
+            <p style="color: #00875a; font-size: 0.9rem; margin-bottom: 0.5rem; margin-top: 0.25rem;">www.example.com/{{ query }}</p>
+            <p style="color: var(--text-main);">This is a placeholder description for the search result of {{ query }}. It shows how the search page handles queries effectively.</p>
+        </div>
+        <div class="result-item" style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <a href="#" style="color: var(--primary-color); font-size: 1.2rem; font-weight: 500; text-decoration: underline;">Latest news about {{ query }}</a>
+            <p style="color: #00875a; font-size: 0.9rem; margin-bottom: 0.5rem; margin-top: 0.25rem;">news.oohay.com/{{ query }}</p>
+            <p style="color: var(--text-main);">Find all the breaking news, live updates, and analysis regarding {{ query }} right here on Oohay.</p>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="main-container">
+    <aside class="left-sidebar">
+        <ul class="sidebar-links">
+            <li><a href="{{ url_for('home') }}">News</a></li>
+            <li><a href="{{ url_for('finance') }}">Finance</a></li>
+            <li><a href="{{ url_for('category', name='sports') }}">Sports</a></li>
+            <li><a href="{{ url_for('category', name='entertainment') }}">Entertainment</a></li>
+            <li><a href="{{ url_for('category', name='life') }}">Life</a></li>
+            <li><a href="{{ url_for('category', name='shopping') }}">Shopping</a></li>
+            <li><a href="{{ url_for('category', name='weather') }}">Weather</a></li>
+        </ul>
+    </aside>
+
+    <section class="news-feed" id="news-feed-container">
+        <!-- Populated by JavaScript -->
+    </section>
+
+    <aside class="right-sidebar">
+        <div class="widget card">
+            <h3>Market Summary</h3>
+            <ul class="market-list" id="market-list-container">
+                <!-- Populated by JavaScript -->
+            </ul>
+        </div>
+        <div class="widget card">
+            <h3>Trending Now</h3>
+            <ul class="trending-list" id="trending-list-container">
+                <!-- Populated by JavaScript -->
+            </ul>
+        </div>
+    </aside>
+</main>
+{% endblock %}
