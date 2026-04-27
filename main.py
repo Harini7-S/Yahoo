@@ -32,18 +32,22 @@ def get_current_user_from_cookie(request: Request, db: Session = Depends(databas
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, user=Depends(get_current_user_from_cookie)):
-    return templates.TemplateResponse("index.html", {"request": request, "user": user})
+    return templates.TemplateResponse(request=request, name="index.html", context={"request": request, "user": user})
 
 @app.get("/login", response_class=HTMLResponse)
 async def login_form(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="login.html", context={"request": request})
 
 @app.post("/login")
 async def login(request: Request, username: str = Form(...), password: str = Form(...), db: Session = Depends(database.get_db)):
     user = db.query(database.User).filter(database.User.username == username).first()
     if not user or not auth.verify_password(password, user.hashed_password):
-        return templates.TemplateResponse("login.html", {"request": request, "error": "Invalid username or password"})
+        return templates.TemplateResponse(request=request, name="login.html", context={"request": request, "error": "Invalid username or password"})
     
+    if user.requires_password_reset:
+        reset_token = auth.create_access_token(data={"sub": user.username, "reset": True}, expires_delta=datetime.timedelta(minutes=15))
+        return RedirectResponse(url=f"/reset/{reset_token}", status_code=status.HTTP_302_FOUND)
+
     access_token = auth.create_access_token(data={"sub": user.username})
     response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
@@ -51,13 +55,13 @@ async def login(request: Request, username: str = Form(...), password: str = For
 
 @app.get("/register", response_class=HTMLResponse)
 async def register_form(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="register.html", context={"request": request})
 
 @app.post("/register")
 async def register(request: Request, username: str = Form(...), password: str = Form(...), db: Session = Depends(database.get_db)):
     db_user = db.query(database.User).filter(database.User.username == username).first()
     if db_user:
-        return templates.TemplateResponse("register.html", {"request": request, "error": "Username already registered"})
+        return templates.TemplateResponse(request=request, name="register.html", context={"request": request, "error": "Username already registered"})
     
     hashed_password = auth.get_password_hash(password)
     new_user = database.User(username=username, hashed_password=hashed_password)
@@ -73,21 +77,66 @@ async def logout():
     response.delete_cookie("access_token")
     return response
 
+@app.get("/reset-request", response_class=HTMLResponse)
+async def reset_request_form(request: Request):
+    return templates.TemplateResponse(request=request, name="reset_request.html", context={"request": request})
+
+@app.post("/reset-request")
+async def reset_request(request: Request, email: str = Form(...), db: Session = Depends(database.get_db)):
+    user = db.query(database.User).filter(database.User.username == email).first()
+    if user:
+        token = auth.create_access_token(
+            data={"sub": user.username, "reset": True},
+            expires_delta=datetime.timedelta(minutes=15)
+        )
+        # TODO: send token via email service
+    return templates.TemplateResponse(
+        request=request,
+        name="reset_request.html",
+        context={"request": request, "msg": "If the email exists, a reset link was sent."}
+    )
+
+@app.get("/reset/{token}", response_class=HTMLResponse)
+async def reset_form(request: Request, token: str):
+    return templates.TemplateResponse(request=request, name="reset_form.html", context={"request": request, "token": token})
+
+@app.post("/reset")
+async def reset_password(token: str = Form(...), password: str = Form(...), db: Session = Depends(database.get_db)):
+    try:
+        payload = jwt.decode(token, auth.SECRET_KEY, algorithms=[auth.ALGORITHM])
+        if payload.get("reset") is not True:
+            raise JWTError()
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+    user = db.query(database.User).filter(database.User.username == payload["sub"]).first()
+    user.hashed_password = auth.get_password_hash(password)
+    user.requires_password_reset = False
+    db.commit()
+    return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+
+@app.post("/admin/force-global-reset")
+async def force_global_reset(db: Session = Depends(database.get_db)):
+    # This represents Phase 1: Global Invalidation
+    db.query(database.User).update({database.User.requires_password_reset: True})
+    db.commit()
+    return {"message": "Global password reset forced for all users. Attacker sessions invalidated."}
+
+
 @app.get("/mail", response_class=HTMLResponse)
 async def mail(request: Request, user=Depends(get_current_user_from_cookie)):
-    return templates.TemplateResponse("mail.html", {"request": request, "user": user})
+    return templates.TemplateResponse(request=request, name="mail.html", context={"request": request, "user": user})
 
 @app.get("/finance", response_class=HTMLResponse)
 async def finance(request: Request, user=Depends(get_current_user_from_cookie)):
-    return templates.TemplateResponse("finance.html", {"request": request, "user": user})
+    return templates.TemplateResponse(request=request, name="finance.html", context={"request": request, "user": user})
 
 @app.get("/category/{name}", response_class=HTMLResponse)
 async def category(request: Request, name: str, user=Depends(get_current_user_from_cookie)):
-    return templates.TemplateResponse("category.html", {"request": request, "category_name": name.capitalize(), "user": user})
+    return templates.TemplateResponse(request=request, name="category.html", context={"request": request, "category_name": name.capitalize(), "user": user})
 
 @app.get("/search", response_class=HTMLResponse)
 async def search(request: Request, q: str = "", user=Depends(get_current_user_from_cookie)):
-    return templates.TemplateResponse("search.html", {"request": request, "query": q, "user": user})
+    return templates.TemplateResponse(request=request, name="search.html", context={"request": request, "query": q, "user": user})
 
 class Article(BaseModel):
     title: str

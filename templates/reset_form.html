@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Set New Password - Oohay!{% endblock %}
+
+{% block content %}
+<main class="main-container" style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+    <section class="card" style="width: 100%; max-width: 400px; padding: 2rem;">
+        <h2 style="margin-bottom: 1.5rem; text-align: center;">Set New Password</h2>
+        <form action="/reset" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+            <input type="hidden" name="token" value="{{ token }}" />
+            <div class="form-group">
+                <label for="password" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">New Password</label>
+                <input type="password" id="password" name="password" required 
+                       style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;">
+            </div>
+            <button type="submit" class="search-btn" style="width: 100%; border-radius: 8px; padding: 0.75rem;">
+                Update Password
+            </button>
+        </form>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <a href="/login" style="color: var(--primary-color); font-weight: 600; font-size: 0.9rem;">Back to Login</a>
+        </div>
+    </section>
+</main>
+{% endblock %}
