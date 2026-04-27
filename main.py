@@ -138,6 +138,18 @@ async def category(request: Request, name: str, user=Depends(get_current_user_fr
 async def search(request: Request, q: str = "", user=Depends(get_current_user_from_cookie)):
     return templates.TemplateResponse(request=request, name="search.html", context={"request": request, "query": q, "user": user})
 
+@app.get("/security", response_class=HTMLResponse)
+async def security_demo(request: Request, user=Depends(get_current_user_from_cookie)):
+    return templates.TemplateResponse(request=request, name="security.html", context={"request": request, "user": user})
+
+@app.get("/api/admin/dump-db")
+async def dump_db(db: Session = Depends(database.get_db)):
+    users = db.query(database.User).limit(5).all()
+    # In a real system this would never exist, this is strictly for demonstration of the hashed passwords
+    return {
+        "users": [{"username": u.username, "hashed_password": u.hashed_password} for u in users]
+    }
+
 class Article(BaseModel):
     title: str
     source: str
